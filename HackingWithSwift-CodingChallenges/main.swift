@@ -67,6 +67,18 @@ assert(challenge11(word1: "Clamp", word2: "Grans") == false, "Challenge 11 faile
 assert(challenge11(word1: "Clamp", word2: "Clam") == false, "Challenge 11 failed")
 assert(challenge11(word1: "clamp", word2: "maple") == false, "Challenge 11 failed")
 
+assert(challenge12(input: "swift switch swill swim") == "swi", "Challenge 12 failed")
+assert(challenge12(input: "flip flap flop") == "fl", "Challenge 12 failed")
+assert(challenge12(input: "apple apricot avocado") == "a", "Challenge 12 failed")
+
+assert(challenge13(input: "aabbcc") == "a2b2c2", "Challenge 13 failed")
+assert(challenge13(input: "aaabaaabaaa") == "a3b1a3b1a3", "Challenge 13 failed")
+assert(challenge13(input: "aaAAaa") == "a2A2a2", "Challenge 13 failed")
+assert(challenge13(input: "a") == "a1", "Challenge 13 failed")
+assert(challenge13(input: "") == "", "Challenge 13 failed")
+assert(challenge13(input: "aaa") == "a3", "Challenge 13 failed")
+assert(challenge13(input: "ab") == "a1b1", "Challenge 13 failed")
+
 //Are the letters unique? -> Write a function that accepts a String as its only parameter, and returns true if the string has only unique letters, taking letter case into account.
 func challenge1(input word: String) -> Bool {
     return Set(word).count == word.count
@@ -176,4 +188,46 @@ func challenge11(word1 left: String, word2 right: String) -> Bool {
         }
     }
     return true
+}
+
+// Find longest prefix -> Write a function that accepts a string of words with a similar prefix, separated by spaces, and returns the longest substring that prefixes all words.
+func challenge12(input phrase: String) -> String {
+    let words = phrase.components(separatedBy: " ")
+    guard let firstWord = words.first else {
+        return ""
+    }
+    
+    var prefix = ""
+    
+    for letter in firstWord {
+        prefix.append(letter)
+        if !words.allSatisfy({ word in
+            word.hasPrefix(prefix)
+        }) {
+            prefix.removeLast()
+            break
+        }
+    }
+    return prefix
+}
+
+// Run-length encoding -> Write a function that accepts a string as input, then returns how often each letter is repeated in a single run, taking case into account.
+func challenge13(input word: String) -> String {
+    let wordArray = Array(word)
+    guard wordArray.count > 0 else { return "" }
+    
+    var result = ""
+    var currentLetter = wordArray.first!
+    var counter = 1
+    for i in 1..<wordArray.count {
+        if(wordArray[i] == currentLetter) {
+            counter += 1
+        } else {
+            result.append("\(currentLetter)\(counter)")
+            currentLetter = wordArray[i]
+            counter = 1
+        }
+    }
+    result.append(String("\(currentLetter)\(counter)"))
+    return result
 }
