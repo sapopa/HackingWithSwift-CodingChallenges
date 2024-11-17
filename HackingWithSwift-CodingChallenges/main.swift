@@ -214,10 +214,9 @@ func challenge12(input phrase: String) -> String {
 // Run-length encoding -> Write a function that accepts a string as input, then returns how often each letter is repeated in a single run, taking case into account.
 func challenge13(input word: String) -> String {
     let wordArray = Array(word)
-    guard wordArray.count > 0 else { return "" }
+    guard var currentLetter = wordArray.first else { return "" }
     
     var result = ""
-    var currentLetter = wordArray.first!
     var counter = 1
     for i in 1..<wordArray.count {
         if(wordArray[i] == currentLetter) {
