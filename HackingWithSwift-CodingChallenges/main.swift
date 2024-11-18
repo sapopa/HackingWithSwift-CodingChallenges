@@ -79,6 +79,63 @@ assert(challenge13(input: "") == "", "Challenge 13 failed")
 assert(challenge13(input: "aaa") == "a3", "Challenge 13 failed")
 assert(challenge13(input: "ab") == "a1b1", "Challenge 13 failed")
 
+assert(challenge15(input: "Swift Coding Challenges") == "tfiwS gnidoC segnellahC", "Challenge 15 failed")
+assert(challenge15(input: "The quick brown fox") == "ehT kciuq nworb xof", "Challenge 15 failed")
+assert(challenge15(input: "Hello World") == "olleH dlroW", "Challenge 15 failed")
+assert(challenge15(input: "Test this sentence") == "tseT siht ecnetnes", "Challenge 15 failed")
+assert(challenge15(input: "Singleword") == "drowelgniS", "Challenge 15 failed")
+assert(challenge15(input: "") == "", "Challenge 15 failed")
+
+//challenge16() // uncomment this line of code to see the output. Since this challenge did not want to assert specific cases, I commented this out for keeping the console clear
+
+var range = 1...5
+assert(range.contains(challenge17(from: 1, to: 5)) == true, "Challenge 17 failed")
+range = 8...10
+assert(range.contains(challenge17(from: 8, to: 10)) == true , "Challenge 17 failed")
+range = 12...12
+assert(range.contains(challenge17(from: 12, to: 12)) == true, "Challenge 17 failed")
+range = 12...18
+assert(range.contains(challenge17(from: 12, to: 18)) == true, "Challenge 17 failed")
+
+assert(challenge18(number: 4, power: 3) == pow(4.0, 3.0), "Challenge 18 failed")
+assert(challenge18(number: 2, power: 8) == pow(2.0, 8.0), "Challenge 18 failed")
+assert(challenge18(number: 5, power: 0) == pow(5.0, 0.0), "Challenge 18 failed")
+assert(challenge18(number: 2, power: -3) == pow(2.0, -3.0), "Challenge 18 failed")
+assert(challenge18(number: -2, power: 3) == pow(-2.0, 3.0), "Challenge 18 failed")
+assert(challenge18(number: -2, power: -2) == pow(-2.0, -2.0), "Challenge 18 failed")
+
+var result = challenge19(a: 5, b: 10)
+assert(result == (10, 5), "Challenge 19 failed")
+
+result = challenge19(a: -3, b: 7)
+assert(result == (7, -3), "Challenge 19 failed")
+
+result = challenge19(a: 0, b: 0)
+assert(result == (0, 0), "Challenge 19 failed")
+
+result = challenge19(a: 42, b: -42)
+assert(result == (-42, 42), "Challenge 19 failed")
+
+assert(challenge20(number: 11) == true, "Challenge 20 failed")
+assert(challenge20(number: 13) == true, "Challenge 20 failed")
+assert(challenge20(number: 4) == false, "Challenge 20 failed")
+assert(challenge20(number: 9) == false, "Challenge 20 failed")
+assert(challenge20(number: 16777259) == true, "Challenge 20 failed")
+
+
+assert(challenge21(number: 12) == (17, 10), "Challenge 21 failed")
+assert(challenge21(number: 28) == (35, 26), "Challenge 21 failed")
+
+assert(challenge22(for: 32) == (4, "00000100"), "Challenge 22 failed")
+assert(challenge22(for: 41) == (148, "10010100"), "Challenge 22 failed")
+assert(challenge22(for: 4) == (32, "00100000"), "Challenge 22 failed")
+assert(challenge22(for: 148) == (41, "00101001"), "Challenge 22 failed")
+
+assert(challenge23(string: "01010101") == true, "Challenge 23 failed")
+assert(challenge23(string: "123456789") == true, "Challenge 23 failed")
+assert(challenge23(string: "9223372036854775808") == true, "Challenge 23 failed")
+assert(challenge23(string: "1.01") == false, "Challenge 23 failed")
+
 //Are the letters unique? -> Write a function that accepts a String as its only parameter, and returns true if the string has only unique letters, taking letter case into account.
 func challenge1(input word: String) -> Bool {
     return Set(word).count == word.count
@@ -229,4 +286,111 @@ func challenge13(input word: String) -> String {
     }
     result.append(String("\(currentLetter)\(counter)"))
     return result
+}
+
+// Reverse the words in a string -> Write a function that returns a string with each of its words reversed but in the original order, without using a loop.
+func challenge15(input phrase: String) -> String {
+    let words = phrase.components(separatedBy: " ")
+    
+    let reversedWords = words.map { word in
+        word.reversed()
+    }
+    
+    return String(reversedWords.joined(separator: " "))
+}
+
+// Fizz Buzz -> Write a function that counts from 1 through 100, and prints “Fizz” if the counter is evenly divisible by 3, “Buzz” if it’s evenly divisible by 5, “Fizz Buzz” if it’s even divisible by three and five, or the counter number for all other cases.
+func challenge16() {
+    for i in 1...100 {
+        switch i {
+        case _ where i.isMultiple(of: 3) && i.isMultiple(of: 5):
+            print("Fizz Buzz")
+        case _ where  i.isMultiple(of: 3):
+            print("Fizz")
+        case _ where  i.isMultiple(of: 5):
+            print("Buzz")
+        default:
+            print(i)
+        }
+    }
+}
+
+// Generate a random number in a range -> Write a function that accepts positive minimum and maximum integers, and returns a random number between those two bounds, inclusive.
+func challenge17(from lower: Int, to upper: Int) -> Int {
+    return Int.random(in: lower...upper)
+}
+
+// Recreate the pow() function -> Create a function that accepts positive two integers, and raises the first to the power of the second.
+func challenge18(number: Int, power: Int) -> Double {
+    if power == 0 { return 1 }
+    var result: Double = Double(number)
+    for _ in 2...abs(power) {
+        result *= Double(number)
+    }
+    if power < 0 { return 1 / result }
+    return result
+}
+
+// Swap two numbers -> Swap two positive variable integers, a and b, without using a temporary variable.
+func challenge19(a: Int, b: Int) -> (Int, Int) {
+    return (b, a)
+}
+
+// Number is prime -> Write a function that accepts an integer as its parameter and returns true if the number is prime.
+func challenge20(number: Int) -> Bool {
+    guard number > 1 else { return false }
+    let limit = Int(sqrt(Double(number)))
+    for i in 2...limit {
+        if number.isMultiple(of: i) {
+            return false
+        }
+    }
+    return true
+}
+
+// Count binary ones -> Create a function that accepts any positive integer and returns the next highest and next lowest number that has the same number of ones in its binary representation. If either number is not possible, return nil for it.
+func challenge21(number: Int) -> (nextHighest: Int?, nextLowest: Int?) {
+    func numberOfOnes(number: Int) -> Int {
+        let binaryNumber = String(number, radix: 2)
+        return binaryNumber.filter { digit in
+            digit == "1"
+        }.count
+    }
+    
+    var nextHighest: Int? = nil
+    var nextLowest: Int? = nil
+    
+    let onesOfNumber = numberOfOnes(number: number)
+    
+    for i in number+1...Int.max {
+        if onesOfNumber == numberOfOnes(number: i) {
+            nextHighest = i
+            break
+        }
+    }
+    
+    for i in (0..<number).reversed() {
+        if onesOfNumber == numberOfOnes(number: i) {
+            nextLowest = i
+            break
+        }
+    }
+    
+    return (nextHighest, nextLowest)
+}
+
+// Binary reverse -> Create a function that accepts an unsigned 8-bit integer and returns its binary reverse, padded so that it holds precisely eight binary digits.
+func challenge22(for number: UInt8) -> (number: UInt8, binaryRepresentation: String) {
+    let binaryNumber = String(number, radix: 2)
+    let paddedBinaryNumber = String(repeating: "0", count: 8 - binaryNumber.count) + binaryNumber
+    let reversedBinaryNumber = String(Array(paddedBinaryNumber).reversed())
+    let reversedNumber = UInt8(reversedBinaryNumber, radix: 2) ?? 0
+    return (reversedNumber, reversedBinaryNumber)
+}
+
+// Integer disguised as string -> Write a function that accepts a string and returns true if it contains only numbers, i.e. the digits 0 through 9.
+func challenge23(string: String) -> Bool {
+    return string.allSatisfy { char in
+        char.isNumber
+    }
 }
