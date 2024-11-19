@@ -136,6 +136,49 @@ assert(challenge23(string: "123456789") == true, "Challenge 23 failed")
 assert(challenge23(string: "9223372036854775808") == true, "Challenge 23 failed")
 assert(challenge23(string: "1.01") == false, "Challenge 23 failed")
 
+assert(challenge24(string: "a1b2c3") == 6, "Challenge 24 failed")
+assert(challenge24(string: "a10b20c30") == 60, "Challenge 24 failed")
+assert(challenge24(string: "h8ers") == 8, "Challenge 24 failed")
+
+assert(challenge25(number: 9) == 3, "Challenge 25 failed")
+assert(challenge25(number: 16777216) == 4096, "Challenge 25 failed")
+assert(challenge25(number: 16) == 4, "Challenge 25 failed")
+assert(challenge25(number: 15) == 3, "Challenge 25 failed")
+
+assert(challenge26(substract: 5, from: 9) == 4, "Challenge 26 failed")
+assert(challenge26(substract: 10, from: 30) == 20, "Challenge 26 failed")
+
+
+//assert(challenge27(filename: "challenge27", numberOfLines: 3) == "Twelfth Night, Othello, Macbeth", "Challenge 27 failed")
+//assert(challenge27(filename: "challenge27", numberOfLines: 100) == "Twelfth Night, Othello, Macbeth, King Lear, Julius Caesar, Hamlet, Cymbeline, Coriolanus, Antony and Cleopatra", "Challenge 27 failed")
+//assert(challenge27(filename: "challenge27", numberOfLines: 0) == "", "Challenge 27 failed")
+
+assert([5, 15, 55, 515].challenge37(count: "5") == 6, "Challenge 37 failed")
+assert([5, 15, 55, 515].challenge37(count: "1") == 2, "Challenge 37 failed")
+assert([55555].challenge37(count: "5") == 5, "Challenge 37 failed")
+assert([55555].challenge37(count: "1") == 0, "Challenge 37 failed")
+
+assert([1, 2, 3, 4].challenge38(count: 3) == [1, 2, 3], "Challenge 38 failed")
+assert(["q", "f", "k"].challenge38(count: 10) == ["f", "k", "q"], "Challenge 38 failed")
+assert([256, 16].challenge38(count: 3) == [16, 256], "Challenge 38 failed")
+assert([String]().challenge38(count: 3) == [], "Challenge 38 failed")
+
+assert(["a", "abc", "ab"].challenge39() == ["abc", "ab", "a"], "Challenge 39 failed")
+assert(["Paul", "Taylor", "Adele"].challenge39() == ["Taylor", "Adele", "Paul"], "Challenge 39 failed")
+assert([String]().challenge39() == [], "Challenge 39 failed")
+
+assert(challenge40(from: 1, to: 100, positionsToRemove: [25, 20, 6]) == [7, 21, 26], "Challenge 40 failed")
+
+assert([1, 2, 3].challenge41() == 2, "Challenge 41 failed")
+assert([1, 2, 9].challenge41() == 2, "Challenge 41 failed")
+assert([1, 3, 5, 7, 9].challenge41() == 5, "Challenge 41 failed")
+assert([1, 2, 3, 4].challenge41() == 2.5, "Challenge 41 failed")
+assert([Int]().challenge41() == nil, "Challenge 41 failed")
+
+assert([1, 2, 3].challenge42(firstIndexOf: 1) == 0, "Challenge 42 failed")
+assert([1, 2, 3].challenge42(firstIndexOf: 3) == 2, "Challenge 42 failed")
+assert([1, 2, 3].challenge42(firstIndexOf: 5) == nil, "Challenge 42 failed")
+
 //Are the letters unique? -> Write a function that accepts a String as its only parameter, and returns true if the string has only unique letters, taking letter case into account.
 func challenge1(input word: String) -> Bool {
     return Set(word).count == word.count
@@ -392,5 +435,122 @@ func challenge22(for number: UInt8) -> (number: UInt8, binaryRepresentation: Str
 func challenge23(string: String) -> Bool {
     return string.allSatisfy { char in
         char.isNumber
+    }
+}
+
+// Add numbers inside a string -> Given a string that contains both letters and numbers, write a function that pulls out all the numbers then returns their sum.
+func challenge24(string: String) -> Int {
+    var result = 0
+    let splittedString = string.split { char in
+        !char.isNumber
+    }
+    for number in splittedString {
+        if let number = Int(number) {
+            result += number
+        }
+    }
+    return result
+}
+
+// Calculate a square root by hand -> Write a function that returns the square root of a positive integer, rounded down to the nearest integer, without using sqrt().
+func challenge25(number: Int) -> Int {
+    return Int(floor(pow(Double(number), 0.5)))
+}
+
+// Subtract without subtract -> Create a function that subtracts one positive integer from another, without using -.
+func challenge26(substract: Int, from: Int) -> Int {
+    return from + -1 * substract
+}
+
+// Print last lines -> Write a function that accepts a filename on disk, then prints its last N lines in reverse order, all on a single line separated by commas.
+func challenge27(filename: String, numberOfLines: Int) -> String {
+    let currentDirectory = FileManager.default.currentDirectoryPath
+    print("Current Directory: \(currentDirectory)")
+
+    let filePath = "\(currentDirectory)/\(filename)"
+    print("Looking for file at: \(filePath)")
+
+    guard let input = try? String(contentsOfFile: filePath, encoding: .unicode) else {
+        print("File not found or cannot be read.")
+        return ""
+    }
+    var lines = input.components(separatedBy: .newlines)
+    guard lines.count > 0 else { return "" }
+    lines.reverse()
+    var answer = [String]()
+    for i in 0..<min(lines.count, numberOfLines) {
+        answer.append(lines[i])
+    }
+    return answer.joined(separator: ", ")
+}
+
+
+// Count the numbers -> Write an extension for collections of integers that returns the number of times a specific digit appears in any of its numbers.
+extension Collection<Int> {
+    func challenge37(count: Character) -> Int {
+        var numberOfOccurences = 0
+        self.forEach { number in
+            numberOfOccurences += String(number).reduce(into: 0) { partialResult, char in
+                if char == count {
+                    partialResult += 1
+                }
+            }
+        }
+        return numberOfOccurences
+    }
+}
+
+// Find N smallest -> Write an extension for all collections that returns the N smallest elements as an array, sorted smallest first, where N is an integer parameter.
+extension Collection where Iterator.Element: Comparable {
+    func challenge38(count: Int) -> [Iterator.Element] {
+        let sorted = self.sorted()
+        return Array(sorted.prefix(count))
+    }
+}
+
+// Sort a string array by length -> Extend collections with a function that returns an array of strings sorted by their lengths, longest first.
+extension Collection<String>{
+    func challenge39() -> [String] {
+        return self.sorted { left, right in
+            left.count > right.count
+        }
+    }
+}
+
+// Missing numbers in array -> Create a function that accepts an array of unsorted numbers from 1 to 100 where zero or more numbers might be missing, and returns an array of the missing numbers.
+// I adjusted it to accept any range
+func challenge40(from: Int, to: Int, positionsToRemove: [Int]) -> [Int] {
+    guard from <= to else { return [] }
+    var array = Array(from...to)
+    var result = [Int]()
+    positionsToRemove.forEach { number in
+        guard number < array.count else { return }
+        result.append(array.remove(at: number))
+    }
+    return result.sorted()
+}
+
+// Find the median -> Write an extension to collections that accepts an array of Int and returns the median average, or nil if there are no values.
+// The mean average is the sum of some numbers divided by how many there are. The median average is the middle of a sorted list. If there is no single middle value – e.g. if there are eight numbers - then the median is the mean of the two middle values.
+extension Collection<Int> {
+    func challenge41() -> Double? {
+        guard !self.isEmpty else { return nil }
+        let sortedSelf = self.sorted()
+        if sortedSelf.count % 2 == 1 {
+            return Double(sortedSelf[Int(sortedSelf.count / 2)])
+        }
+        return Double((sortedSelf[Int(sortedSelf.count / 2) - 1] + sortedSelf[Int(sortedSelf.count / 2)])) / 2
+    }
+}
+
+// Recreate firstIndex(of:) -> Write an extension for all collections that reimplements the firstIndex(of:) method.
+extension Collection where Iterator.Element: Equatable {
+    func challenge42(firstIndexOf: Element) -> Int? {
+        for (index, element) in self.enumerated() {
+            if element == firstIndexOf {
+                return index
+            }
+        }
+        return nil
     }
 }
